@@ -1,5 +1,5 @@
 
-export class RegisterDto {
+export class AuthRegisterUserDto {
     email: string;
     password: string;
     confirm_password: string;
