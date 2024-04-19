@@ -1,20 +1,44 @@
 import { Injectable } from '@nestjs/common';
-import { AuthRegisterUserDto } from './dto/register.dto';
+import { AuthRegisterUserDto } from './dto/authRegisterUser.dto';
+import { PrismaService } from 'src/prisma.service';
+import { User } from '@prisma/client';
 
 @Injectable()
 export class AuthService {
-  constructor() {}
+  constructor(private readonly db: PrismaService) {}
+
+  async getUserByEmail(email: string): Promise<User> {
+    return this.db.user.findUnique({
+      where: {
+        email,
+      },
+    });
+  }
 
   async register(authRegisterUserDto: AuthRegisterUserDto): Promise<any> {
+    
+    const user = await this.db.user.create({
+      data: {
+        email: authRegisterUserDto.email,
+        password: authRegisterUserDto.password,
+        name: authRegisterUserDto.name,
+        lastname: authRegisterUserDto.lastname,
+        phone: authRegisterUserDto.phone,
+      },
+    });
 
-    // Remove password and confirm_password from the response
-    authRegisterUserDto.confirm_password &&
-      delete authRegisterUserDto.confirm_password;
-    authRegisterUserDto.password && delete authRegisterUserDto.password;
+    const excludedFields = [
+      'password',
+      'active',
+      'verified',
+      'verifiedAt',
+      'updatedAt',
+    ];
 
-    return {
-      message: 'User registered successfully',
-      data: authRegisterUserDto,
-    };
+    for (const field of excludedFields) {
+      delete user[field];
+    }
+
+    return user;
   }
 }
