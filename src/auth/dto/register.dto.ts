@@ -1,9 +1,33 @@
+import {
+  IsEmail,
+  IsNotEmpty,
+  IsString,
+  MinLength,
+} from 'class-validator';
 
 export class AuthRegisterUserDto {
-    email: string;
-    password: string;
-    confirm_password: string;
-    name: string;
-    lastname: string;
-    phone: string;
+  @IsNotEmpty()
+  @IsString()
+  @IsEmail()
+  email: string;
+
+  @IsNotEmpty()
+  @IsString()
+  @MinLength(8)
+  confirm_password: string;
+
+  @IsNotEmpty()
+  @IsString()
+  @MinLength(2)
+  name: string;
+
+  @IsNotEmpty()
+  @IsString()
+  @MinLength(2)
+  lastname: string;
+
+  @IsNotEmpty()
+  @IsString()
+  @MinLength(10)
+  phone: string;
 }
