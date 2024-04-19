@@ -4,6 +4,7 @@ import {
   IsString,
   MinLength,
 } from 'class-validator';
+import { IsEqualTo } from './decorators/IsEqualsTo';
 
 export class AuthRegisterUserDto {
   @IsNotEmpty()
@@ -19,6 +20,9 @@ export class AuthRegisterUserDto {
   @IsNotEmpty()
   @IsString()
   @MinLength(8)
+  @IsEqualTo('password', {
+    message: 'Password and confirm password must match',
+  })
   confirm_password: string;
 
   @IsNotEmpty()
