@@ -14,6 +14,11 @@ export class AuthRegisterUserDto {
   @IsNotEmpty()
   @IsString()
   @MinLength(8)
+  password: string;
+
+  @IsNotEmpty()
+  @IsString()
+  @MinLength(8)
   confirm_password: string;
 
   @IsNotEmpty()
