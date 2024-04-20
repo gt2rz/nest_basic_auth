@@ -16,7 +16,6 @@ export class AuthService {
   }
 
   async register(authRegisterUserDto: AuthRegisterUserDto): Promise<any> {
-    
     const user = await this.db.user.create({
       data: {
         email: authRegisterUserDto.email,
@@ -57,5 +56,9 @@ export class AuthService {
     }
 
     return code;
+  }
+
+  isActiveSmsNotification(): boolean {
+    return process.env.SMS_NOTIFICATIONS_ENABLED == 'true';
   }
 }
