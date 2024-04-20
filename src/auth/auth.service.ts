@@ -112,4 +112,12 @@ export class AuthService {
 
     return isValid;
   }
+
+  async getUserById(id: string): Promise<User> {
+    return this.db.user.findUnique({
+      where: {
+        id,
+      },
+    });
+  }
 }

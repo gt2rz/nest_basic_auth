@@ -53,6 +53,14 @@ export class AuthController {
       throw new HttpException('Code not valid', 200);
     }
 
+    const user = await this.authService.getUserById(body.id);
+
+    this.notificationService.sendSimpleMail(
+      user.email,
+      'Welcome!',
+      `Hi ${user.name}, Welcome to our platform!`,
+    );
+
     return {
       message: 'Code verified successfully',
     };
