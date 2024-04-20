@@ -37,6 +37,6 @@ export class AuthRegisterUserDto {
 
   @IsNotEmpty()
   @IsString()
-  @MinLength(10)
+  @MinLength(13)
   phone: string;
 }

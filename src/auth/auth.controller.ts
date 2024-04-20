@@ -1,15 +1,14 @@
-import {
-  Body,
-  Controller,
-  HttpException,
-  Post,
-} from '@nestjs/common';
+import { Body, Controller, HttpException, Post } from '@nestjs/common';
 import { AuthRegisterUserDto } from './dto/authRegisterUser.dto';
 import { AuthService } from './auth.service';
+import { NotificationsService } from 'src/notifications/notifications.service';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly autService: AuthService) {}
+  constructor(
+    private readonly autService: AuthService,
+    private readonly notificationService: NotificationsService,
+  ) {}
 
   @Post('register')
   async register(@Body() authRegisterUserDto: AuthRegisterUserDto) {
@@ -23,9 +22,14 @@ export class AuthController {
 
     const user = await this.autService.register(authRegisterUserDto);
 
-    if(!user) {
+    if (!user) {
       throw new HttpException('User not created', 500);
     }
+
+    await this.notificationService.sendSMS({
+      phone: authRegisterUserDto.phone,
+      message: 'Welcome to our platform!',
+    });
 
     return {
       message: 'User created successfully',

@@ -11,7 +11,7 @@ export class NotificationsService {
   private readonly phoneSMS: string;
 
   public constructor(private readonly service: TwilioService) {
-    this.phoneSMS = process.env.TWILIO_PHONE_NUMBER;
+    this.phoneSMS = process.env.SMS_PHONE_NUMBER;
     if (!this.phoneSMS) {
       throw new Error('Phone number for sending SMS is not set');
     }
