@@ -22,6 +22,11 @@ export class AuthController {
     }
 
     const user = await this.autService.register(authRegisterUserDto);
+
+    if(!user) {
+      throw new HttpException('User not created', 500);
+    }
+
     return {
       message: 'User created successfully',
       data: user,
