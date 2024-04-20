@@ -61,4 +61,55 @@ export class AuthService {
   isActiveSmsNotification(): boolean {
     return process.env.SMS_NOTIFICATIONS_ENABLED == 'true';
   }
+
+  async verifyCode(userId: string, code: string): Promise<boolean> {
+    let isValid = true;
+    const userCode = await this.db.userVerificationCodes.findFirst({
+      where: {
+        userId,
+        code,
+      },
+    });
+
+    if (!userCode) {
+      return false;
+    }
+
+    if (process.env.VERIFICATION_CODE_ENABLED == 'false') {
+      const createdAt = new Date(userCode.createdAt);
+      let minutes =
+        parseInt(process.env.VERIFICATION_CODE_EXPIRATION_MINUTES) || 15;
+
+      if (isNaN(minutes)) {
+        minutes = 15;
+      }
+
+      createdAt.setMinutes(createdAt.getMinutes() + minutes);
+
+      if (createdAt < new Date()) {
+        isValid = false;
+      }
+    }
+
+    await this.db.userVerificationCodes.delete({
+      where: {
+        id: userCode.id,
+      },
+    });
+
+    await this.db.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        verified: true,
+        verifiedAt: new Date(),
+        active: true,
+      },
+    });
+
+    isValid = true;
+
+    return isValid;
+  }
 }

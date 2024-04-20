@@ -44,4 +44,17 @@ export class AuthController {
       data: user,
     };
   }
+
+  @Post('verify-code')
+  async verifyCode(@Body() body: { code: string; id: string }) {
+    const result = await this.authService.verifyCode(body.id, body.code);
+
+    if (!result) {
+      throw new HttpException('Code not valid', 200);
+    }
+
+    return {
+      message: 'Code verified successfully',
+    };
+  }
 }
