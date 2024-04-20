@@ -1,4 +1,10 @@
-import { Body, Controller, HttpException, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  HttpCode,
+  HttpException,
+  Post,
+} from '@nestjs/common';
 import { AuthRegisterUserDto } from './dto/authRegisterUser.dto';
 import { AuthService } from './auth.service';
 import { NotificationsService } from 'src/notifications/notifications.service';
@@ -46,6 +52,7 @@ export class AuthController {
   }
 
   @Post('verify-code')
+  @HttpCode(200)
   async verifyCode(@Body() body: { code: string; id: string }) {
     const result = await this.authService.verifyCode(body.id, body.code);
 
