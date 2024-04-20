@@ -14,15 +14,25 @@ datasource db {
 }
 
 model User {
-  id         String    @id @default(cuid())
-  email      String    @unique
-  name       String
-  lastname   String
-  password   String
-  active     Boolean   @default(false)
-  verified   Boolean   @default(false)
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @updatedAt
-  verifiedAt DateTime?
-  phone      String
+  id                    String                  @id @default(cuid())
+  email                 String                  @unique
+  name                  String
+  lastname              String
+  password              String
+  active                Boolean                 @default(false)
+  verified              Boolean                 @default(false)
+  createdAt             DateTime                @default(now())
+  updatedAt             DateTime                @updatedAt
+  verifiedAt            DateTime?
+  phone                 String
+  UserVerificationCodes UserVerificationCodes?
+}
+
+model UserVerificationCodes {
+  id        String   @id @default(cuid())
+  code      String
+  userId    String   @unique
+  createdAt DateTime @default(now())
+
+  User User @relation(fields: [userId], references: [id])
 }

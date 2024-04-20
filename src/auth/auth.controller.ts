@@ -26,9 +26,11 @@ export class AuthController {
       throw new HttpException('User not created', 500);
     }
 
+    const code = await this.autService.generateVerificationCode(user.id);
+
     await this.notificationService.sendSMS({
       phone: authRegisterUserDto.phone,
-      message: 'Welcome to our platform!',
+      message: `Welcome to our platform!. Your verification code is ${code}`,
     });
 
     return {
